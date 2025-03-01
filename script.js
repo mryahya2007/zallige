@@ -50,70 +50,90 @@ document.addEventListener('DOMContentLoaded', function() {
     // Search functionality
     const searchInput = document.querySelector('.search-input');
     
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.trim().toLowerCase();
-        
-        // If search term is empty, show all sections
-        if (searchTerm === '') {
-            sections.forEach(section => {
-                section.style.display = 'block';
-                setTimeout(() => {
-                    section.style.opacity = '1';
-                    section.style.transform = 'translateY(0)';
-                }, 10);
-            });
-            return;
-        }
-        
-        // Filter sections based on search term
-        sections.forEach(section => {
-            const sectionTitle = section.querySelector('h3').textContent.toLowerCase();
-            const sectionDesc = section.querySelector('p').textContent.toLowerCase();
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.trim().toLowerCase();
             
-            if (sectionTitle.includes(searchTerm) || sectionDesc.includes(searchTerm)) {
-                section.style.display = 'block';
-                setTimeout(() => {
-                    section.style.opacity = '1';
-                    section.style.transform = 'translateY(0)';
-                }, 10);
-            } else {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    section.style.display = 'none';
-                }, 300);
+            // If search term is empty, show all sections
+            if (searchTerm === '') {
+                sections.forEach(section => {
+                    section.style.display = 'block';
+                    setTimeout(() => {
+                        section.style.opacity = '1';
+                        section.style.transform = 'translateY(0)';
+                    }, 10);
+                });
+                return;
             }
+            
+            // Filter sections based on search term
+            sections.forEach(section => {
+                const sectionTitle = section.querySelector('h3').textContent.toLowerCase();
+                const sectionDesc = section.querySelector('p').textContent.toLowerCase();
+                
+                if (sectionTitle.includes(searchTerm) || sectionDesc.includes(searchTerm)) {
+                    section.style.display = 'block';
+                    setTimeout(() => {
+                        section.style.opacity = '1';
+                        section.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    section.style.opacity = '0';
+                    section.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        section.style.display = 'none';
+                    }, 300);
+                }
+            });
         });
-    });
+    }
     
     // Pagination functionality
-    //const pageLinks = document.querySelectorAll('.page-link ');
+    const pageLinks = document.querySelectorAll('.page-link');
     
-    pageLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Remove active class from all page links
-            pageLinks.forEach(l => l.classList.remove('active'));
-            
-            // Add active class to clicked link
-            this.classList.add('active');
-            
-            // Scroll to top of sections
-            document.querySelector('.sections').scrollIntoView({
-                behavior: 'smooth'
+    if (pageLinks.length > 0) {
+        pageLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Don't prevent default here to allow navigation
+                
+                // Remove active class from all page links
+                pageLinks.forEach(l => l.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Scroll to top of sections
+                const sectionsElement = document.querySelector('.sections');
+                if (sectionsElement) {
+                    sectionsElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
             });
         });
-    });
+    }
     
     // Add hover effect to section cards
     sections.forEach(section => {
         section.addEventListener('mouseenter', function() {
-            this.querySelector('.button').style.transform = 'translateY(-3px)';
+            const button = this.querySelector('.button');
+            if (button) {
+                button.style.transform = 'translateY(-3px)';
+            }
         });
         
         section.addEventListener('mouseleave', function() {
-            this.querySelector('.button').style.transform = 'translateY(0)';
+            const button = this.querySelector('.button');
+            if (button) {
+                button.style.transform = 'translateY(0)';
+            }
         });
+    });
+
+    // Add animation to sections
+    sections.forEach((section, index) => {
+        section.style.animation = `fadeIn 0.5s ease forwards ${0.1 * (index + 1)}s`;
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
     });
 });
